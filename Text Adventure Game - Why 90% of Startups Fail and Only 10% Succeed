@@ -1,0 +1,404 @@
+## To practice and improve my skills in Python, I decided to develop a Text Adventure Game on a book I recently read called "The Lean Startup". 
+## The book talks about how to build a successful startup, describing its core components, and how products or services should be developed and launched. 
+##I divided the game into 5 steps, and in each, I present a different building block. 
+
+## For reference check out my blog post --> (https://loredonati.org/the-lean-startup)
+
+# No bugs detected.
+# Press 4 to fail anytime.
+
+import random
+
+def step_0():
+    #start with User/player introduction
+    print(
+"""
+Before we begin our journey together, I would like to ask you something..
+
+""")
+    question_list = ['What industry are you in?',
+                     'What is your profession?',
+                     'What country are you from?']
+    questions = 1
+    
+    #using random package
+    while questions > 0:
+        question = random.choice(question_list)
+        input(prompt="<Press enter for your question>\n")
+        print(question)
+        print(" ")
+        
+        # starting if statement
+        if question == question_list[0]:
+            industry = input("> ")
+            print(f"Good! Then pay careful attention! The principles we are about to discuss are applicable to the {industry} industry!")
+            input(prompt='<Press Enter to continue>\n')
+            step_1()
+        # adding an elif clause         
+        elif question == question_list[1]:
+            profession = input("> ")
+            print(f"Good! Then pay careful attention! Now you are a {profession} but maybe one day you want to build your own company! ")
+            input(prompt='<Press Enter to continue>\n')
+            step_1()
+        # adding an elif clause        
+        elif question == question_list[2]:
+            country = input("> ")
+            print(f"Good! Then pay careful attention! If one day you decide to build your own company in {country} or anywhere else in the world, these principles will help you out!")
+            input(prompt='<Press Enter to continue>\n')
+            step_1()
+            
+            
+# defining step_1            
+def step_1():
+    # Start with introduction to the subject
+    print(
+"""
+Too many startups begin with a product idea that they believe people want. They then spend months, if not years,
+developing that product without ever showing it to the potential customer, even in its most basic form. 
+When they fail to gain widespread client acceptance, it is usually because they never spoke to potential 
+customers to establish whether or not the product was appealing. When customers ultimately communicate - 
+through their indifference - that they don't care about the idea, the startup fails.\n
+So, how do you build a successful startup?
+
+""")
+    input(prompt='<Press Enter to continue>\n')
+        
+    print(
+"""
+----------------------------------------------------------------------------------------------------------------
+|                                             STEP 1 - A SCIENTIFIC APPROACH!                                  |
+----------------------------------------------------------------------------------------------------------------
+""")
+    input(prompt='<Press Enter to continue>\n')
+    
+    print(
+"""
+Have you ever heard about the Lean Startup?
+
+Press 1 if you have, and want to jump to step 2.
+Press 2 if you did not and want to know more about it.
+
+""")
+    
+    choice = input(prompt="> ")
+    
+    choice = choice.casefold()
+    # starting an if statement 
+    if '1' in choice or 'jump' in choice or 'i have' in choice or 'step 2' in choice:
+        print(
+"""
+------------------------------------------------------------------------------
+BUT FIRST, you must answer this question.
+         
+         |
+         |
+         V
+
+Every startup is a grand experiment attempting to answer a question. 
+As an entrepreneur, which of the following is the right question to ask?
+
+1) Can this product be built?
+2) Why should we build this product?
+        
+""")
+        choice = input(prompt="> ")
+        
+        choice = choice.casefold()
+        
+        # Start of nested conditional statement
+        if '1' in choice or 'can' in choice:
+            print(
+"""
+That's incorrect. Are you sure you already want to jump steps?
+
+""")
+            step_1()
+        # adding an elif clause     
+        elif '2' in choice or 'why' in choice or "should" in choice:
+            print("That's correct! Please enjoy step 2!\n")
+            input(prompt='<Press Enter to continue>\n')  
+            step_2()
+        # adding an else clause     
+        else:
+            print("Invalid entry. Please try again.\n")
+            step_1()
+        
+        # End of nested conditional statement
+        
+    # adding an elif clause     
+    elif '2' in choice or 'not' in choice or "didn't" in choice or 'want' in choice or 'more' in choice:
+        print(
+"""
+The Lean Startup methodology is a scientific approach that is revolutionizing the way new products are developed
+and launched. It gets the desired product to customers' hands faster. Moreover, this methodology makes the 
+process of starting a company less risky. It favors experimentation over elaborate planning, 
+customer feedback over intuition, and iterative design over traditional “big design up front” development.
+
+""")
+        input(prompt='<Press Enter to continue>\n')
+        step_2()
+    # adding an elif clause 
+    elif '4' in choice or 'fail' in choice:
+        fail()
+    # adding an else clause 
+    else:
+        print("Invalid entry. Please try again.\n")
+        step_1()
+    
+
+# defining step_2
+def step_2():
+    print(
+"""
+----------------------------------------------------------------------------------------------------------------
+|                                             STEP 2 - THE FEEDBACK LOOP!                                      |
+----------------------------------------------------------------------------------------------------------------
+""")
+    input(prompt='<Press Enter to continue>\n')
+    
+    print(
+"""
+A core component of the Lean Startup methodology is the _______ feedback loop (press the correct number):
+1) Measure-Build-Learn.
+2) Build-Measure-Learn.
+3) Learn-Measure-Build.
+
+""") 
+    choice = input(prompt="> ")
+    
+    choice = choice.casefold()
+    # starting an if statement 
+    if '1' in choice or 'measure-build-learn' in choice:
+        print("You want something to measure first. Please try again.\n")
+        step_2()
+    # adding an elif clause     
+    elif '2' in choice or 'build-measure-learn' in choice:
+        print(
+"""
+BRAVO! The fundamental activity of a startup is to turn ideas into products, measure how customers respond, 
+and then learn whether to pivot or persevere.
+
+""")
+        input(prompt='<Press Enter to continue>\n')
+        step_3()
+    # adding an elif clause     
+    elif '3' in choice or 'learn-measure-build' in choice:
+        print("You want something to learn from. Please try again.\n")
+        step_2()
+    # adding an elif clause     
+    elif '4' in choice or 'fail' in choice:
+        fail()
+    # adding an else clause 
+    else:
+        print("Invalid entry. Please try again.\n")
+        step_2()
+
+
+# defining step_3   
+def step_3():
+    print(
+"""
+----------------------------------------------------------------------------------------------------------------
+|                                            STEP 3 - CREATING AN MVP!                                         |
+----------------------------------------------------------------------------------------------------------------
+""")
+    input(prompt='<Press Enter to continue>\n')    
+    
+    print(
+"""
+At this step, it is important figuring out the problem that needs to be solved and then developing an MVP to 
+jumpstart the learning process as quickly as possible.
+
+
+By the way, what does MVP stand for? 
+
+1) Most Valuable Player.
+2) Minimum Viable Product.
+
+""")
+    choice = input("> ")
+    
+    choice = choice.casefold()
+    # adding an if statement 
+    if '1' in choice or 'valuable' in choice:
+        print("Not in this context. Please try again.\n")
+        step_3()
+    # adding an elif clause     
+    elif '2' in choice or 'minimum' in choice or 'viable' in choice or 'product' in choice:
+        print(
+"""
+Exactly! The MVP is an essential component and it represents a prototype of future service or product with a 
+minimum amount of effort and time. The MVP should have key characteristics of a future product, 
+and it is created with the aim to receive feedback on the implemented idea, as well as to make quick relevant 
+adjustments.
+
+""")
+        input(prompt='<Press Enter to continue>\n')
+        step_4()
+    # adding an elif clause     
+    elif '4' in choice:
+        fail()
+    # adding an else clause     
+    else:
+        print("Invalid entry. Please try again.\n")
+        step_3()
+        
+        
+# defining step_4 
+def step_4():
+    print(
+"""
+----------------------------------------------------------------------------------------------------------------
+|                                             STEP 4 - INNOVATION ACCOUNTING!                                  |
+----------------------------------------------------------------------------------------------------------------
+""")
+    input(prompt='<Press Enter to continue>\n') 
+    
+    print(
+"""
+Once the MVP is established, a startup can work on testing. 
+This involves metrics that can demonstrate cause and effect questions.
+
+
+The Lean Method is based on AAA metrics: 
+- Actionable metrics - tie specific and repeatable actions to observed results.
+- Accessible metrics - simple reports. 
+- _________ metrics - you can make changes quickly.
+
+1) Artistic. 
+2) Auditable.
+3) Angelic.
+
+""")
+    choice = input(prompt="> ")
+    
+    choice = choice.casefold()
+
+    # adding an if clause 
+    if '1' in choice or 'artistic' in choice:
+        print("Very funny. Please try again.\n")
+        step_4()
+    # adding an elif clause     
+    elif '2' in choice or 'auditable' in choice:
+        print(
+"""
+Right on! In fact, the unit of progress for Lean Startups is validated learning - a rigorous method 
+for demonstrating progress when one is embedded in the soil of extreme uncertainty. This learning can be 
+validated scientifically, by running experiments (AAA metrics) that allow us to test each element of our vision.
+
+""")
+        input(prompt='<Press Enter to continue>\n')
+        step_5()
+    # adding an elif clause     
+    elif '3' in choice or 'angelic' in choice:
+        print("Very funny. Please try again.\n")
+        step_4()
+        
+    # adding an elif clause 
+    elif '4' in choice:
+        fail()
+        
+    # adding an else clause 
+    else:
+        print("Invalid entry. Please try again.\n")
+        step_4()
+
+
+# defining step_5   
+def step_5():
+    print(
+"""
+----------------------------------------------------------------------------------------------------------------
+|                                             STEP 5 - TUNE THE ENGINE!                                        |
+----------------------------------------------------------------------------------------------------------------
+""")
+    input(prompt='<Press Enter to continue>\n') 
+    
+    print(
+"""
+After validating the hypothesis and testing the MVP, we can finally collect and analyze the data, learn from  
+them, and decide to persevere with our actual product or pivot to something different.
+
+""")
+    input(prompt='<Press Enter to continue>\n') 
+    
+    print(
+"""
+We are now at the end of our journey around the Startup World. 
+
+But before we go, I have one last question for you in order to pass the Lean Startup Introductory Course.
+
+You might not know that the Lean Methodology was first introduced by Toyota, which created a production system 
+based on the basic philosophies of "jidoka" and "Just-in-Time" to efficiently and quickly produce vehicles of 
+sound quality, one at a time, that fully satisfy customer requirements.
+
+What year was Toyota Motor Corporation founded? (you have 3 chances available)
+
+""")
+    number = 1937
+    chances = 3
+    
+    while chances > 0:
+        try:
+            choice = input(prompt="> ")
+            choice = int(choice)
+            
+            # conditional statement based on user input
+            if choice == number:
+                print("\nYOU MADE IT!")
+                win()
+
+            # adding an elif clause 
+            elif choice != number:
+                chances -= 1
+
+                # nested conditional statement based on chances
+                if chances > 0:
+                    print(f"\nThat's incorrect. You have {chances} chances remaining. ...Hint - Ted Turner was born the same year!")
+
+                # adding an elif clause 
+                elif chances == 0:
+                    print(f"\nYou have zero chances left. The number was {number}.")
+                    fail()
+
+                # adding an else clause 
+                else:
+                    print('Error.')
+                    step_5()
+
+            # setting a different error message for inner and outer loops
+            else:
+                print("\nSomething went wrong.")
+                step_5()
+            
+        # insert the except function for non numerical input   
+        except ValueError:
+            print("\nSelect only numbers. Please try again.")
+            step_5()
+            
+    
+# defining win         
+def win():
+    print(
+"""
+----------------------------------------------------------------------------------------------------------------
+|                                             CONGRATULATIONS!                                                 |
+----------------------------------------------------------------------------------------------------------------
+
+Thank you for sticking around all the way through the end. I hope you had some fun learning with me!
+If you want to know more about The Lean Startup check out my blog post - https://loredonati.org/the-lean-startup
+
+""")
+    input(prompt='<Press Enter to exit>\n')
+    exit(0)
+    
+    
+# defining fail      
+def fail(): 
+    print("You've failed, but thanks for playing!")
+    input(prompt='<Press Enter to exit>\n')
+    exit(0)
+
+
+    
+step_0()
