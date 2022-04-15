@@ -1,0 +1,366 @@
+## In this project, I used the information from the birthweight_low dataset to build a predictive model 
+## on a continuous response variable (Y-variable) that would predict the weight of new borns based on parents' features. 
+## This project encompasses feature engineering, model preparation, variable selection, and model development.
+
+
+### NEW CODE BLOCK ###
+
+# importing libraries
+import pandas as pd                   # data science essentials
+import matplotlib.pyplot as plt       # essential graphical output
+import seaborn as sns                 # enhanced graphical output
+import numpy as np                    # mathematical essentials
+import statsmodels.formula.api as smf # regression modeling
+import sklearn.linear_model           # scikit-learn library
+from sklearn.model_selection import train_test_split # train/test split
+from sklearn.linear_model import LinearRegression # linear regression (scikit-learn)
+from sklearn.linear_model import LogisticRegression # logistic regression (scikit-learn)
+
+
+# specifying file name
+file = './__datasets/birthweight_low.xlsx'
+
+
+# reading the file into Python
+birthweight = pd.read_excel(io = file,
+                       header = 0,
+                       sheet_name = 0)
+
+
+# outputting the first ten rows of the dataset
+birthweight.head(n = 10)
+
+### NEW CODE BLOCK ###
+
+# formatting and printing the dimensions of the dataset
+print(f"""
+Size of Original Dataset
+------------------------
+Observations: {birthweight.shape[0]}
+Features:     {birthweight.shape[1]}
+""")
+
+### NEW CODE BLOCK ###
+
+birthweight.isnull().sum() #checking if there's any missing values 
+
+### NEW CODE BLOCK ###
+
+# histogram for npvis to check if it is skewed 
+sns.histplot(data   = birthweight,
+             x      = 'npvis',
+             kde    = True)
+
+
+# rendering the plot
+plt.show()
+
+##########################################
+
+# histogram for mage to check if it is skewed 
+sns.histplot(data   = birthweight,
+             x      = 'mage',
+             kde    = True)
+
+
+# rendering the plot
+plt.show()
+
+##########################################
+
+# histogram for fage to check if it is skewed 
+sns.histplot(data   = birthweight,
+             x      = 'fage',
+             kde    = True)
+
+
+# rendering the plot
+plt.show()
+
+#########################################
+
+### NEW CODE BLOCK ###
+
+# log transforming bwght 
+birthweight['log_bwght'] = np.log(birthweight['bwght'])
+
+# log transforming npvis 
+birthweight['log_npvis'] = np.log(birthweight['npvis'])
+
+# log transforming mage 
+birthweight['log_mage'] = np.log(birthweight['mage'] + 0.001)
+
+# log transforming fage 
+birthweight['log_fage'] = np.log(birthweight['fage'] + 0.001)
+
+### NEW CODE BLOCK ###
+
+# histogram for log_npvis
+sns.histplot(data   = birthweight,
+             x      = 'log_npvis',
+             kde    = True)
+
+
+# rendering the plot
+plt.show()
+
+##########################################
+
+# histogram for log_mage
+sns.histplot(data   = birthweight,
+             x      = 'log_mage',
+             kde    = True)
+
+
+# rendering the plot
+plt.show()
+
+##########################################
+
+# histogram for log_fage
+sns.histplot(data   = birthweight,
+             x      = 'log_fage',
+             kde    = True)
+
+
+# rendering the plot
+plt.show()
+
+#########################################
+
+### NEW CODE BLOCK ###
+
+# imputing 'feduc' with the mean
+birthweight['feduc'] = birthweight['feduc'].fillna(birthweight['feduc'].mean())
+
+
+# imputing 'meduc' with the mean
+birthweight['meduc'] = birthweight['meduc'].fillna(birthweight['meduc'].mean())
+
+
+# imputing 'npvis' with the mean
+birthweight['npvis'] = birthweight['npvis'].fillna(birthweight['npvis'].mean())
+
+
+# imputing 'log_npvis' with the mean
+birthweight['log_npvis'] = birthweight['log_npvis'].fillna(birthweight['log_npvis'].mean())
+
+### NEW CODE BLOCK ###
+
+# making sure all missing values have been taken care of
+birthweight.isnull().any()
+
+### NEW CODE BLOCK ###
+
+# creating a new variable aggregating cigs and drinks
+birthweight['cigs_per_week'] = birthweight['cigs'] *7
+birthweight['cigs_and_drinks'] = birthweight['cigs_per_week'] + birthweight['drink'] 
+
+### NEW CODE BLOCK ###
+
+# placeholder variables
+birthweight['mover_40']                   = 0    # mother is 40 or older
+birthweight['munder_40']                  = 0    # mother is under 40
+birthweight['fover_40']                   = 0    # father is 40 or older
+birthweight['funder_40']                  = 0    # father is under 40
+birthweight['mfover_40']                  = 0    # mother and father are 40 or older
+birthweight['heavy_smoker']               = 0    # mother is heavy smoker
+birthweight['light_smoker']               = 0    # mother is light smoker 
+birthweight['heavy_drinker']              = 0    # mother is heavy drinker
+birthweight['light_drinker']              = 0    # mother is light drinker
+birthweight['heavy_cigs_and_drinks']      = 0    # mother is heavy smoker and drinker
+
+
+for index, value in birthweight.iterrows():
+    
+
+    # mother is 40 or older
+    if birthweight.loc[index, 'mage'] >= 40:
+        birthweight.loc[index, 'mover_40'] = 1
+   
+    # mother is under 40
+    if birthweight.loc[index, 'mage'] < 40:
+        birthweight.loc[index, 'munder_40'] = 1
+
+    # father is 40 or older
+    if birthweight.loc[index, 'fage'] >= 40:
+        birthweight.loc[index, 'fover_40'] = 1  
+    
+    # mother and father are 40 or older
+    if birthweight.loc[index, 'fage'] >= 40 and birthweight.loc[index, 'mage'] >= 40:
+        birthweight.loc[index, 'mfover_40'] = 1
+        
+    # father is under 40
+    if birthweight.loc[index, 'fage'] < 40:
+        birthweight.loc[index, 'funder_40'] = 1
+               
+    # mother is heavy smoker
+    if birthweight.loc[index, 'cigs'] > 6:
+        birthweight.loc[index, 'heavy_smoker'] = 1
+    
+    # mother is light smoker 
+    if birthweight.loc[index, 'cigs'] <= 6:
+        birthweight.loc[index, 'light_smoker'] = 1
+        
+    # mother is heavy drinker
+    if birthweight.loc[index, 'drink'] > 5:
+        birthweight.loc[index, 'heavy_drinker'] = 1
+        
+    # mother is light drinker
+    if birthweight.loc[index, 'drink'] <= 5:
+        birthweight.loc[index, 'light_drinker'] = 1
+    
+    # mother is heavy smoker and drinker
+    if birthweight.loc[index, 'cigs_and_drinks'] > 20:
+        birthweight.loc[index, 'heavy_cigs_and_drinks'] = 1
+
+### NEW CODE BLOCK ###
+
+# preparing explanatory variable data
+birthweight_data = birthweight.drop('bwght', axis = 1)
+birthweight_data = birthweight.drop('log_bwght', axis = 1)
+
+
+# preparing response variables
+birthweight_target = birthweight.loc[ : , 'log_bwght']
+
+# preparing training and testing sets (all letters are lowercase)
+x_train, x_test, y_train, y_test = train_test_split(
+            birthweight_data,
+            birthweight_target,
+            test_size = 0.25,
+            random_state = 219)
+
+
+# checking the shapes of the datasets
+print(f"""
+Training Data
+-------------
+X-side: {x_train.shape}
+y-side: {y_train.shape}
+
+
+Testing Data
+------------
+X-side: {x_test.shape}
+y-side: {y_test.shape}
+""")
+
+### NEW CODE BLOCK ###
+
+# declaring set of x-variables
+x_variables = ['fage', 'drink', 'light_drinker', 'light_smoker',
+               'mwhte', 'mblck', 'moth', 'fwhte', 'fblck', 'foth',
+               'log_npvis', 'munder_40', 'funder_40', 'mover_40', 'fover_40',
+               'heavy_smoker', 'heavy_drinker', 'cigs_and_drinks', 'mfover_40', 'heavy_cigs_and_drinks']
+
+# looping to make x-variables suitable for statsmodels
+for val in x_variables:
+    print(f"{val} +")
+
+### NEW CODE BLOCK ###
+
+# merging X_train and y_train so that they can be used in statsmodels
+birthweight_train = pd.concat([x_train, y_train], axis = 1)
+
+
+# Step 1: build a model
+lm_best = smf.ols(formula =  """log_bwght ~ fage +
+drink +
+light_drinker +
+light_smoker +
+mwhte +
+mblck +
+moth +
+fwhte +
+fblck +
+foth +
+log_npvis +
+munder_40 +
+funder_40 +
+mover_40 +
+fover_40 +
+heavy_smoker +
+heavy_drinker +
+cigs_and_drinks +
+mfover_40 +
+heavy_cigs_and_drinks 
+""",  data = birthweight_train)
+
+
+# Step 2: fit the model based on the data
+results = lm_best.fit()
+
+
+
+# Step 3: analyze the summary output
+print(results.summary())
+
+### NEW CODE BLOCK ###
+
+# applying model in scikit-learn
+
+# Preparing a DataFrame based the the analysis above
+ols_data   = birthweight.loc[ : , x_variables]
+
+
+# Preparing the target variable
+birthweight_target = birthweight.loc[ : , 'log_bwght']
+
+
+###############################################
+## setting up more than one train-test split ##
+###############################################
+# FULL X-dataset (normal Y)
+x_train_FULL, x_test_FULL, y_train_FULL, y_test_FULL = train_test_split(
+            birthweight_data,     # x-variables
+            birthweight_target,   # y-variable
+            test_size = 0.25,
+            random_state = 219)
+
+
+# OLS p-value x-dataset (normal Y)
+x_train_OLS, x_test_OLS, y_train_OLS, y_test_OLS = train_test_split(
+            ols_data,         # x-variables
+            birthweight_target,   # y-variable
+            test_size = 0.25,
+            random_state = 219)
+
+# INSTANTIATING a model object
+lr = LinearRegression()
+
+
+# FITTING to the training data
+lr_fit = lr.fit(x_train_OLS, y_train_OLS)
+
+
+# PREDICTING on new data
+lr_pred = lr_fit.predict(x_test_OLS)
+
+
+# SCORING the results
+OLS_training_score = lr.score(x_train_OLS, y_train_OLS).round(4)
+OLS_testing_score  = lr.score(x_test_OLS, y_test_OLS).round(4)
+OLS_Train_Test_Gap = abs(OLS_training_score - OLS_testing_score).round(4)
+
+
+# dynamic printing the results
+
+print(f"""
+Model                                        
+--------------------                                     
+OLS Regression        
+
+Training Score
+--------------------
+{OLS_training_score}
+
+Testing Score
+--------------------
+{OLS_testing_score}
+
+Train-Test Gap Score
+--------------------
+{OLS_Train_Test_Gap}
+
+""")
